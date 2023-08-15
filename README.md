@@ -1,21 +1,24 @@
 # protected_video_player
-This video player is protected by a whitelist fetched via http. The default video player is used, and modified 
-
-Docs:
-
-https://udonsharp.docs.vrchat.com/
-
-This works with the default video player, but you must remove anything from the udon graph that isn't involved in video syncing. Control of the input box, url, and playing the video should be guarded. We do this in method `OnStringLoadSuccess`. 
+You can modify the default UdonSharp video player to only be playable by those on a whitelist fetched via http/s. Remove anything from the udon graph that isn't involved in video syncing. Control of the input box, url, and playing the video should be guarded.
 
 ```csharp
+// ...
+
 public class protect_ownership : UdonSharpBehaviour
 {   
     // Replace this with your own RAW text file from github or pastebin
     VRCUrl names = new VRCUrl("https://pastebin.com/raw/eeeee");
 
+// ...
+
+void Start()
+{
+    VRCStringDownloader.LoadUrl(names, (IUdonEventReceiver)this);
+
+// ...
 ```
 
-VRCUrl objects cannot be created on the fly, and new objects cannot be created in methods of the UdonSharpBehaviour. They must exist only as members of the class. 
+VRCUrl objects cannot be created on the fly, and new objects cannot be created in methods of the UdonSharpBehaviour. They must exist only as members of the class. You can however request the data anywhere in the class.
 
 ```csharp
      public void OnURLChanged() {
